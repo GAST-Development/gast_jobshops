@@ -16,19 +16,24 @@ end)
 
 RegisterNetEvent('gast_jobshops:setProductPrice')
 AddEventHandler('gast_jobshops:setProductPrice', function(shop, slot)
-    local input = lib.inputDialog(Strings.sell_price, {Strings.amount_input})
+    local input = lib.inputDialog(Locales[Config.Locale]['sell_price'], {Locales[Config.Locale]['amount_input']})
     local price = tonumber(input and input[1]) or 0
     price = math.max(price, 0)
+
     TriggerEvent('ox_inventory:closeInventory')
     TriggerServerEvent('gast_jobshops:setData', shop, slot, math.floor(price))
-    lib.notify({
-        title = Strings.success,
-        description = (Strings.item_stocked_desc):format(price),
-        type = 'success'
-    })
+
+    if Config.notifications == "ox_lib" then
+        lib.notify({
+            title = Locales[Config.Locale]['success'],
+            description = (Locales[Config.Locale]['item_stocked_desc']):format(price),
+            type = 'success'
+        })
+    elseif Config.notifications == "esx_default" then
+        ESX.ShowNotification('~g~' .. Locales[Config.Locale]['success'] .. ': ' .. (Locales[Config.Locale]['item_stocked_desc']):format(price))
+    end
 end)
 
--- NPC Creation
 Citizen.CreateThread(function()
     for _, v in pairs(Config.Shops) do
         if v.npcshopspawn.enabled then
@@ -81,7 +86,7 @@ CreateThread(function()
                     name = 'sphere',
                     event = 'gast_jobshops:stash',
                     icon = 'fa-solid fa-warehouse',
-                    label = 'Sklad predajne',
+                    label = Locales[Config.Locale]['store_inventory'],
                     groups = v.locations.stash.groups
                 }}
             })

@@ -1,11 +1,12 @@
 Config = {}
 
-Config.Locale = GetConvar('esx:locale', 'en')
+Config.Locale = GetConvar('esx:locale', 'cs')
+Config.notifications = "ox_lib" --"esx_default" , 
 
 Config.Shops = {
     ['global_trans'] = { 
         label = 'Global Trans Predajna',
-        type = 'global_trans',  -- Tu pridávame typ obchodu
+        type = 'global_trans',
         blip = {
             enabled = true,
             coords = vec3(-1202.1899, -1462.5983, 4.3739),
@@ -37,7 +38,7 @@ Config.Shops = {
     },
     ['liehovar'] = { 
         label = 'Liehovar Predajna',
-        type = 'liehovar',  -- Tu pridávame typ obchodu
+        type = 'liehovar',
         blip = {
             enabled = true,
             coords = vec3(-1228.8452, -1436.7335, 4.3739),
@@ -69,7 +70,7 @@ Config.Shops = {
     },
     ['farma'] = { 
         label = 'Farma Predajna',
-        type = 'farma',  -- Tu pridávame typ obchodu
+        type = 'farma',
         blip = {
             enabled = true,
             coords = vec3(-1251.1653, -1440.4678, 4.3739),

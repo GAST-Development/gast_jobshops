@@ -18,7 +18,7 @@ RegisterNetEvent('gast_jobshops:setProductPrice')
 AddEventHandler('gast_jobshops:setProductPrice', function(shop, slot)
     local input = lib.inputDialog(Strings.sell_price, {Strings.amount_input})
     local price = tonumber(input and input[1]) or 0
-    price = math.max(price, 0)  -- Uistíme sa, že cena nie je negatívna
+    price = math.max(price, 0)
     TriggerEvent('ox_inventory:closeInventory')
     TriggerServerEvent('gast_jobshops:setData', shop, slot, math.floor(price))
     lib.notify({
@@ -28,16 +28,20 @@ AddEventHandler('gast_jobshops:setProductPrice', function(shop, slot)
     })
 end)
 
--- Optimalizovaná slučka pre tvorbu NPC
+-- NPC Creation
 Citizen.CreateThread(function()
-    for job, v in pairs(Config.Shops) do
+    for _, v in pairs(Config.Shops) do
         if v.npcshopspawn.enabled then
             local npcHash = GetHashKey(v.npcshopspawn.name)
-            RequestModel(npcHash)
-            while not HasModelLoaded(npcHash) do Wait(1) end
+            if not HasModelLoaded(npcHash) then
+                RequestModel(npcHash)
+                while not HasModelLoaded(npcHash) do Wait(1) end
+            end
 
-            RequestAnimDict("mini@strip_club@idles@bouncer@base")
-            while not HasAnimDictLoaded("mini@strip_club@idles@bouncer@base") do Wait(1) end
+            if not HasAnimDictLoaded("mini@strip_club@idles@bouncer@base") then
+                RequestAnimDict("mini@strip_club@idles@bouncer@base")
+                while not HasAnimDictLoaded("mini@strip_club@idles@bouncer@base") do Wait(1) end
+            end
 
             local ped = CreatePed(4, v.npcshopspawn.hex, v.npcshopspawn.pedcoords, v.npcshopspawn.heading, false, true)
             FreezeEntityPosition(ped, true)
@@ -48,33 +52,26 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Funkcia na vytvorenie Blipu
-local function createBlip(coords, sprite, color, text, scale)
-    local blip = AddBlipForCoord(coords[1], coords[2], coords[3])
-    SetBlipSprite(blip, sprite)
-    SetBlipDisplay(blip, 4)
-    SetBlipScale(blip, scale)
-    SetBlipColour(blip, color)
-    SetBlipAsShortRange(blip, true)
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(text)
-    EndTextCommandSetBlipName(blip)
-    return blip
-end
-
--- Vytvorenie Blipov pre obchody
+-- Blips creation
 CreateThread(function()
-    for job, v in pairs(Config.Shops) do
+    for _, v in pairs(Config.Shops) do
         if v.blip.enabled then
-            createBlip(v.blip.coords, v.blip.sprite, v.blip.color, v.blip.string, v.blip.scale)
+            local blip = AddBlipForCoord(v.blip.coords)
+            SetBlipSprite(blip, v.blip.sprite)
+            SetBlipDisplay(blip, 4)
+            SetBlipScale(blip, v.blip.scale)
+            SetBlipColour(blip, v.blip.color)
+            SetBlipAsShortRange(blip, true)
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentString(v.blip.string)
+            EndTextCommandSetBlipName(blip)
         end
     end
 end)
 
--- Optimalizované pridávanie target zón pre obchody
+-- Target Zones creation
 CreateThread(function()
-    for job, v in pairs(Config.Shops) do
-        -- Stash zóna
+    for _, v in pairs(Config.Shops) do
         if v.locations.stash.enabled then
             exports.ox_target:addSphereZone({
                 coords = v.locations.stash.coords,
@@ -90,17 +87,14 @@ CreateThread(function()
             })
         end
 
-        -- Obchodné zóny
         if v.locations.shop.enabled then
-            local shopCoords = v.locations.shop.coords
-            local shopRange = v.locations.shop.range
             exports.ox_target:addSphereZone({
-                coords = shopCoords,
-                radius = shopRange,
+                coords = v.locations.shop.coords,
+                radius = v.locations.shop.range,
                 debug = drawZones,
                 options = {{
                     name = 'sphere',
-                    event = 'gast_jobshops:store' .. job, -- Dynamické vytváranie názvu udalosti podľa jobu
+                    event = 'gast_jobshops:store' .. v.type, -- Dynamicky použije typ obchodu
                     icon = 'fa-sharp fa-solid fa-cart-shopping',
                     label = v.label
                 }}
@@ -118,20 +112,12 @@ AddEventHandler('gast_jobshops:stash', function()
     end
 end)
 
--- Konsolidované spracovanie obchodných udalostí
-RegisterNetEvent('gast_jobshops:storeglobal_trans')
-AddEventHandler('gast_jobshops:storeglobal_trans', function()
-    exports.ox_inventory:openInventory('shop', { type = 'global_trans', id = 1 })
+-- Konsolidované obchodné udalosti
+CreateThread(function()
+    for _, v in pairs(Config.Shops) do
+        RegisterNetEvent('gast_jobshops:store' .. v.type)
+        AddEventHandler('gast_jobshops:store' .. v.type, function()
+            exports.ox_inventory:openInventory('shop', { type = v.type, id = 1 })
+        end)
+    end
 end)
-
-RegisterNetEvent('gast_jobshops:storeliehovar')
-AddEventHandler('gast_jobshops:storeliehovar', function()
-    exports.ox_inventory:openInventory('shop', { type = 'liehovar', id = 1 })
-end)
-
-RegisterNetEvent('gast_jobshops:storefarma')
-AddEventHandler('gast_jobshops:storefarma', function()
-    exports.ox_inventory:openInventory('shop', { type = 'farma', id = 1 })
-end)
-
-

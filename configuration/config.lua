@@ -3,8 +3,9 @@ Config = {}
 Config.Locale = GetConvar('esx:locale', 'en')
 
 Config.Shops = {
-    ['global_trans'] = { -- Job name
+    ['global_trans'] = { 
         label = 'Global Trans Predajna',
+        type = 'global_trans',  -- Tu pridávame typ obchodu
         blip = {
             enabled = true,
             coords = vec3(-1202.1899, -1462.5983, 4.3739),
@@ -14,7 +15,7 @@ Config.Shops = {
             string = 'Global Trans Predajna'
         },
         npcshopspawn = {
-            enabled = true, -- Enable boss menu?
+            enabled = true,
             pedcoords = vec3(-1206.2247, -1460.4371, 3.3739),
             heading = 301.01,
             hex = 0x3E8417BC, 
@@ -34,8 +35,9 @@ Config.Shops = {
             }
         }
     },
-    ['liehovar'] = { -- Job name
+    ['liehovar'] = { 
         label = 'Liehovar Predajna',
+        type = 'liehovar',  -- Tu pridávame typ obchodu
         blip = {
             enabled = true,
             coords = vec3(-1228.8452, -1436.7335, 4.3739),
@@ -45,7 +47,7 @@ Config.Shops = {
             string = 'Liehovar Predajna'
         },
         npcshopspawn = {
-            enabled = true, -- Enable boss menu?
+            enabled = true,
             pedcoords = vec3(-1224.8590, -1439.3011, 3.3739),
             heading = 128.53,
             hex = 0x26F067AD, 
@@ -65,8 +67,9 @@ Config.Shops = {
             }
         }
     },
-    ['farma'] = { -- Job name
+    ['farma'] = { 
         label = 'Farma Predajna',
+        type = 'farma',  -- Tu pridávame typ obchodu
         blip = {
             enabled = true,
             coords = vec3(-1251.1653, -1440.4678, 4.3739),
@@ -76,7 +79,7 @@ Config.Shops = {
             string = 'Farma Predajna'
         },
         npcshopspawn = {
-            enabled = true, -- Enable boss menu?
+            enabled = true,
             pedcoords = vec3(-1253.3129, -1444.7531, 3.3739),
             heading = 29.05,
             hex = 0xC0DB04CF, 
@@ -97,4 +100,3 @@ Config.Shops = {
         }
     }
 }
-

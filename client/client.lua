@@ -57,7 +57,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Blips creation
 CreateThread(function()
     for _, v in pairs(Config.Shops) do
         if v.blip.enabled then
@@ -74,7 +73,6 @@ CreateThread(function()
     end
 end)
 
--- Target Zones creation
 CreateThread(function()
     for _, v in pairs(Config.Shops) do
         if v.locations.stash.enabled then
@@ -99,7 +97,7 @@ CreateThread(function()
                 debug = drawZones,
                 options = {{
                     name = 'sphere',
-                    event = 'gast_jobshops:store' .. v.type, -- Dynamicky použije typ obchodu
+                    event = 'gast_jobshops:store' .. v.type, 
                     icon = 'fa-sharp fa-solid fa-cart-shopping',
                     label = v.label
                 }}
@@ -108,7 +106,6 @@ CreateThread(function()
     end
 end)
 
--- Konsolidované spracovanie udalosti stash
 RegisterNetEvent('gast_jobshops:stash')
 AddEventHandler('gast_jobshops:stash', function()
     local jobName = ESX.PlayerData.job.name
@@ -117,7 +114,6 @@ AddEventHandler('gast_jobshops:stash', function()
     end
 end)
 
--- Konsolidované obchodné udalosti
 CreateThread(function()
     for _, v in pairs(Config.Shops) do
         RegisterNetEvent('gast_jobshops:store' .. v.type)

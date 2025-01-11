@@ -5,9 +5,13 @@ This repository provides a job shop system for the ESX framework using `ox_inven
 
 ## Features
 ✅ **ESX and ox_inventory integration**
+
 ✅ **NPC-based shop system with customizable blips**
+
 ✅ **Item pricing and metadata handling**
+
 ✅ **Support for `ox_target` for interaction zones**
+
 ✅ **Customizable notifications (`ox_lib` and `esx_default`)**
 
 ## Installation

@@ -1,7 +1,11 @@
 Config = {}
 
+Config.VersionCheck = true
+
 Config.Locale = GetConvar('esx:locale', 'cs')
+
 Config.notifications = "ox_lib" --"esx_default" , 
+
 
 Config.Shops = {
     ['global_trans'] = { 
